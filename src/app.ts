@@ -8,7 +8,6 @@ import createServer from "./utils/server";
 
 
 const port = config.get("port") as number;
-const host = config.get("host") as string;
 
 
 const app=createServer();

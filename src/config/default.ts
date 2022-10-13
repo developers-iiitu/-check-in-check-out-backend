@@ -1,5 +1,4 @@
 import env from 'dotenv';
-import log from '../logger';
 
 class Config {
     _config: Record<string, any>;
@@ -7,7 +6,6 @@ class Config {
         env.config();
         this._config = {
             port: process.env.PORT,
-            host: process.env.HOST || "localhost",
             dbUri: process.env.DB_URI,
             saltWorkFactor: 10,
             accessTokenTtl: "15m",

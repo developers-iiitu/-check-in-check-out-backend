@@ -1,5 +1,5 @@
 {
-  "name": "Check In/Out System ",
+  "name": "check-in-out-system",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "build": "tsc",
     "test": "jest ",
     "test:watch": "jest --watch",
-    "heroku": "node dist/app.js"
+    "server": "node dist/app.js"
   },
   "repository": {
     "type": "git",

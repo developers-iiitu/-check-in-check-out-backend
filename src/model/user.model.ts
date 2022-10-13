@@ -2,77 +2,54 @@ import mongoose from "mongoose";
 import config from "../config/default";
 import bcrypt from "bcrypt";
 
-export interface UserDocument extends mongoose.Document {
+
+export enum USER_ROLES {
+    ADMIN = 0,
+    GATE_GUARD = 1,
+    STUDENT = 2
+}
+
+export interface IUser {
     email: string;
-    name: string;
     password: string;
-    role: string;
-    phone: number;
-    hostelName:string;
-    roomNo:number;
+    role: USER_ROLES;
     createdAt: Date;
     updatedAt: Date;
     comparePassword: (candidatePassword: string) => Promise<boolean>;
+};
 
-}
-
-
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema<IUser>({
     email: {
         type: String,
         required: true,
         unique: true
-    },
-    name: {
-        type: String,
-        required: true
     },
     password: {
         type: String,
         required: true
     },
     role: {
-        type: String,
-        required: true,
-        default: "user"
-    },
-    phone: {
         type: Number,
         required: true,
-        unique: true
-    },
-    hostelName:{
-        type:String,
-        required:true
-    },
-    roomNo:{
-        type:Number,
-        required:true
-    },
+        default: USER_ROLES.STUDENT,
+        enum: USER_ROLES
 
-
-},
-    {
-        timestamps: true
     }
-);
+}, {
+    timestamps: true
+});
+const saltRounds = config.get("saltRounds") as number;
 
-UserSchema.pre("save", async function (next: any) {
-    let user = this as UserDocument;
-    if (!user.isModified("password")) {
-        return next();
-    }
-    const salt = await bcrypt.genSalt(config.get("saltWorkFactor") as number);
-    const hash = await bcrypt.hashSync(user.password, salt);
-    user.password = hash;
-    return next();
-}
-);
 
-UserSchema.methods.comparePassword = async function (candidatePassword: string) {
-    const user = this as UserDocument;
-    return bcrypt.compare(candidatePassword, user.password).catch((e) => false);
+userSchema.methods.comparePassword = async function (candidatePassword: string) {
+    const user = this as IUser;
+    return bcrypt.compare(candidatePassword, user.password).catch(e => false);
 }
 
-const User = mongoose.model<UserDocument>("User", UserSchema);
-export default User;
+
+export const User = mongoose.model<IUser>("User", userSchema);
+
+
+
+
+

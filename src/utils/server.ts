@@ -1,6 +1,5 @@
 import express from "express";
-import { deserializeUser } from "../middleware";
-import routes from "../routes";
+
 import cors from "cors";
 function createServer() {
     const app = express();
@@ -14,10 +13,6 @@ function createServer() {
     app.use(express.json());
 
     app.use(express.urlencoded({ extended: false }));
-
-    app.use(deserializeUser);
-
-    routes(app);
 
     return app;
 }
