@@ -18,6 +18,4 @@ const app=createServer();
 app.listen(port, () => {
   log.info(`Server is listening on port ${port}`);
   connect();
-  
-
 });
