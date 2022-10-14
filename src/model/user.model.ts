@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import config from "../config/default";
+import config from "../lib/config/default";
 import bcrypt from "bcrypt";
 
 

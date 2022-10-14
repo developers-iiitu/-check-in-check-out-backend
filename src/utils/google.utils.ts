@@ -1,5 +1,5 @@
 import {google} from "googleapis"
-import config from "../config/default"
+import config from "../lib/config/default"
 
 const OAuth2=google.auth.OAuth2;
 const id=config.get("googleId") as string;

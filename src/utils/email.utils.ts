@@ -1,8 +1,8 @@
 import nodemailer from "nodemailer";
 import {google} from "googleapis";
-import config from "../config/default"
+import config from "../lib/config/default"
 import myOAuth2Client from "./google.utils";
-import log from "../logger";
+import log from "../lib/logger";
 const OAuth2=google.auth.OAuth2;
 export async function sendMail(to:string,subject:string,htmlContent:string){
     myOAuth2Client.setCredentials({refresh_token:config.get("refreshToken") as string});

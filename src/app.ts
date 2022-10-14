@@ -1,7 +1,7 @@
 
-import log from "./logger";
-import config from "./config/default";
-import connect from "./db/connect";
+import log from "./lib/logger";
+import config from "./lib/config/default";
+import connect from "./lib/db/connect";
 import createServer from "./utils/server";
 
 
