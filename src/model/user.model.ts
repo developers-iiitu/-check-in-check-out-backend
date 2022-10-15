@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema<IUser>({
 }, {
     timestamps: true
 });
-const saltRounds = config.get("saltRounds") as number;
+const saltRounds = config.get("saltWorkFactor") as number;
 
 
 userSchema.methods.comparePassword = async function (candidatePassword: string) {
