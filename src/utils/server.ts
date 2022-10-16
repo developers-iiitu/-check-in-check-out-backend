@@ -1,5 +1,5 @@
 import express from "express";
-
+import useragent from "express-useragent";
 import cors from "cors";
 function createServer() {
     const app = express();
@@ -13,6 +13,8 @@ function createServer() {
     app.use(express.json());
 
     app.use(express.urlencoded({ extended: false }));
+
+    app.use(useragent.express());
 
     return app;
 }

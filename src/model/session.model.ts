@@ -6,7 +6,7 @@ export interface ISession {
     userAgent: string;
     valid:boolean;
     lastActive: Date;
-    ip:Array<string>;
+    geoLocation:string;
     machineId:string;
     createdAt: Date;
     updatedAt: Date;
@@ -31,10 +31,10 @@ const SessionSchema = new mongoose.Schema<ISession>({
         type: Date,
         required: true
     },
-    ip: [{
+    geoLocation: {
         type: String,
         required: true
-    }],
+    },
     machineId: {
         type: String,
         required: true,
