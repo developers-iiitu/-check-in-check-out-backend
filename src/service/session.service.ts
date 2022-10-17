@@ -1,4 +1,4 @@
-import { Document, Types } from "mongoose";
+import mongoose, { Document, Types } from "mongoose";
 import log from "../lib/logger";
 import { IUser } from "../model/user.model";
 import { ISession } from "../model/session.model";
@@ -6,7 +6,7 @@ import { findOnSessionQuery, updateManySession,updateOneSession,createNewSession
 import { Request } from "express";
 import { sendMail } from "../utils/email.utils";
 import { login_attemp } from "../utils/login_attemp";
-import { sign } from "../utils/jwt.utils";
+import { decode, sign } from "../utils/jwt.utils";
 import config from "../lib/config/default";
 
 
@@ -19,6 +19,10 @@ interface SessionData {
     userId?:string;
 }
 
+interface IDeviceInfo{
+    userAgent: string;
+    machineId: string;
+}    
 
 
 const createValidateSession = async (
@@ -91,9 +95,35 @@ const createAccessToken = async (user:(Document<unknown, any, IUser> & IUser & {
 const createRefreshToken = async (session:Document<unknown, any, ISession> & ISession & {
     _id: Types.ObjectId;
 }) =>{
-    const refreshToken = sign({ session: session.id },
+    const refreshToken = sign({ sessionId: session.id },
         { expiresIn: config.get("refreshTokenTtl") as string })
         return refreshToken;
 }
 
-export { createValidateSession ,createAccessToken, createRefreshToken};
+const sessionValidation= async(decoded:{userId:mongoose.Types.ObjectId;sessionId:mongoose.Types.ObjectId},deviceInfo:IDeviceInfo)=>{
+    const session = await findOnSessionQuery({_id:decoded.sessionId,machineId:deviceInfo.machineId,userAgent:deviceInfo.userAgent,userId:decoded.userId,valid:true});
+    if(session===null){
+        return false;
+    }
+    await updateOneSession({_id:session.id},{lastActive:new Date()});
+    return decoded.userId;
+}
+
+const recreateAccessToken = async(refreshToken:string,deviceInfo:IDeviceInfo)=>{
+    const {decoded,expired}= decode(refreshToken);
+    if(expired){
+        return false;
+    }
+    if(decoded){
+        const session = await findOnSessionQuery({_id:decoded.sessionId,machineId:deviceInfo.machineId,userAgent:deviceInfo.userAgent,valid:true});
+        if(session===null){
+            return false;
+        }
+        await updateOneSession({_id:session.id},{lastActive:new Date()});
+        const accessToken = sign({userId:session.userId,sessionId:session.id},{expiresIn:config.get("accessTokenTtl") as string});
+        return {accessToken:accessToken,userId:session.userId}; 
+    }
+    return false;
+}
+
+export { createValidateSession ,createAccessToken, createRefreshToken, sessionValidation,recreateAccessToken};
