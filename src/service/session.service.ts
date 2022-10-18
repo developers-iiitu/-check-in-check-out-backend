@@ -31,7 +31,6 @@ const createValidateSession = async (
     })
 ,req:Request) => {
     const machineId = req.body.machineId + '-' + user.id;
-    log.info(machineId);
     const isMachineExits=await findOnSessionQuery({machineId:machineId,userId:user.id});
     let userAgent = req.get("user-agent") || "";
     if(isMachineExits){
@@ -101,7 +100,9 @@ const createRefreshToken = async (session:Document<unknown, any, ISession> & ISe
 }
 
 const sessionValidation= async(decoded:{userId:mongoose.Types.ObjectId;sessionId:mongoose.Types.ObjectId},deviceInfo:IDeviceInfo)=>{
-    const session = await findOnSessionQuery({_id:decoded.sessionId,machineId:deviceInfo.machineId,userAgent:deviceInfo.userAgent,userId:decoded.userId,valid:true});
+    
+    const session = await findOnSessionQuery({_id:decoded.sessionId,machineId:deviceInfo.machineId+'-'+decoded.userId,userAgent:deviceInfo.userAgent,userId:decoded.userId,valid:true});
+    
     if(session===null){
         return false;
     }
@@ -115,8 +116,8 @@ const recreateAccessToken = async(refreshToken:string,deviceInfo:IDeviceInfo)=>{
         return false;
     }
     if(decoded){
-        const session = await findOnSessionQuery({_id:decoded.sessionId,machineId:deviceInfo.machineId,userAgent:deviceInfo.userAgent,valid:true});
-        if(session===null){
+        const session = await findOnSessionQuery({_id:decoded.sessionId,userAgent:deviceInfo.userAgent,valid:true});
+        if(session===null || session.machineId!==deviceInfo.machineId+'-'+session.userId){
             return false;
         }
         await updateOneSession({_id:session.id},{lastActive:new Date()});

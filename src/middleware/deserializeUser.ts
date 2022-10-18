@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {Request,Response,NextFunction} from "express";
 import { decode } from '../utils/jwt.utils';
 import { recreateAccessToken, sessionValidation } from '../service/session.service';
+import log from '../lib/logger';
 
 
 
@@ -12,18 +13,21 @@ const deserializeUser = async (req:Request,res:Response,next:NextFunction) =>{
         userAgent:req.get('user-agent') as string || "",
         machineId:req.get('machine-id') as string
     }
-
+    
     if(!refreshToken){
         return next();
     }
     if(accessToken){
         const {decoded,expired} = decode(accessToken);
+        
         if(decoded){
             const result = await sessionValidation(decoded,deviceInfo);
+            
             if(!result){
                 return next();
             }
             req.user = result;
+            return next();
         }
     }
     const result = await recreateAccessToken(refreshToken,deviceInfo);
