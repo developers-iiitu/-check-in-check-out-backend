@@ -4,7 +4,7 @@ export interface IStudent {
     name: string;
     phone: string;
     hostelName: string;
-    roomNumber: number;
+    roomNumber: string;
     userId: mongoose.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
@@ -24,7 +24,7 @@ const StudentSchema = new mongoose.Schema<IStudent>({
         required: true
     },
     roomNumber: {
-        type: Number,
+        type: String,
         required: true
     },
     userId: {
