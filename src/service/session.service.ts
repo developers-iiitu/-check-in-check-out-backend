@@ -72,7 +72,7 @@ const createValidateSession = async (
     const newSession = await createNewSession(newData);
     // login attemp
     const loginAttempData = {
-        ip:JSON.parse(newData.geoLocation).IPv4,
+        ip:JSON.parse(newData.geoLocation).ip,
         userAgent:userAgent,
         email:user.email,
         timeStamp:newData.lastActive
