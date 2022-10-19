@@ -7,7 +7,7 @@ import geoip from "geoip-lite";
 export default function(){
     const router = Router();
     // create a student user
-    router.post("/api/user/student/create",userStudentCreateHandler);
+    router.post("/api/user/student/create",validateRequest(userStudentCreateSchema),userStudentCreateHandler);
     // user profile
     router.get("/api/user/profile",requiresUser,userProfileHandler);
     // update profile -> admin will be able to update any profile on request

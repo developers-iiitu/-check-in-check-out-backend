@@ -15,6 +15,9 @@ const userStudentCreateSchema = object({
         .min(10,"Phone must be at least 10 characters long")
         .max(10,"Phone must be at most 10 characters long"),
         hostelName: string().required("Hostel Name is Required"),
+        roomNumber: string().required("Room Number is Required")
+        .min(3,"Room No must be at least 3 characters long")
+        .max(3,"Room No must be at most 3 characters long"),
     })
 })
 
