@@ -20,7 +20,11 @@ const userSessionCreateHandler = async (req:Request,res:Response)=>{
     // create Refresh Token
     const refreshToken = await createRefreshToken(session);
     // send Response
-    return res.status(200).json({msg:"Login Succesfully",accessToken:accessToken,refreshToken:refreshToken});
+    let useData = {
+        email:user.email,
+        role:user.role
+    }
+    return res.status(200).json({msg:"Login Succesfully",accessToken:accessToken,refreshToken:refreshToken,userData:useData});
 }
 
 export {userSessionCreateHandler}
