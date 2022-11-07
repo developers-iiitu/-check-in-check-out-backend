@@ -17,6 +17,16 @@ const createUser = async (query: Object) => {
     }
 
 }
+const userUpdateOne = async (query: Object, update: Object) => {
+    try {
+        const updatedUser = await User.updateOne(query,{
+            $set:update
+        });
+        return updatedUser
+    } catch (error) {
+        throw new Error((error as Error).message);
+    }
+}
 const userValidateQuery = async (input: {
     user: (Document<unknown, any, IUser> & IUser & {
         _id: Types.ObjectId;
@@ -24,4 +34,4 @@ const userValidateQuery = async (input: {
 }) => {
     return await input.user.comparePassword(input.password);
 }
-export { findOneUser, createUser, userValidateQuery };
+export { findOneUser, createUser, userValidateQuery,userUpdateOne };

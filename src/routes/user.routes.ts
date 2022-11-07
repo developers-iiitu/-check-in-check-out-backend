@@ -1,5 +1,5 @@
 import {Express, Router, Request, Response} from "express";
-import { userProfileHandler, userStudentCreateHandler } from "../controller/user.controller";
+import { userChangePasswordHandler, userProfileHandler, userStudentCreateHandler } from "../controller/user.controller";
 import { validateRequest,requiresUser } from "../middleware";
 import { userStudentCreateSchema } from "../schema/user.schema";
 import log from "../lib/logger";
@@ -12,7 +12,7 @@ export default function(){
     router.get("/api/user/profile",requiresUser,userProfileHandler);
     // update profile -> admin will be able to update any profile on request
     // change password
-    router.get("/api/user/change-password");
+    router.post("/api/user/change-password",requiresUser,userChangePasswordHandler);
     // Gate Guard account create by admin
     // delete
     // update
