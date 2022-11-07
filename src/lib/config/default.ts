@@ -14,7 +14,8 @@ class Config {
             googleId: process.env.ID,
             googleSecret: process.env.SECRET,
             refreshToken: process.env.REFRESH_TOKEN,
-            email: "20106@iiitu.ac.in"
+            email: "20106@iiitu.ac.in",
+            qrValidateTime: 120000,
         };
 
         
