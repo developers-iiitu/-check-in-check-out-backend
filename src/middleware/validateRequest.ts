@@ -8,12 +8,12 @@ const validate = (schema: AnySchema)=> async(
     next:NextFunction
 
 )=>{
-    log.info(req.body)
     try {
         await schema.validate({
             body:req.body,
             query:req.query,
             params:req.params,
+            headers:req.headers
         });
         return next();
     } catch (e) {

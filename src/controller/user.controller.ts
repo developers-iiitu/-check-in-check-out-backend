@@ -56,6 +56,7 @@ const userProfileHandler = async (req:Request,res:Response)=>{
 // chnage password
 const userChangePasswordHandler = async (req:Request,res:Response)=>{
     
+    
     try {
         const user = await findOneUser({_id:req.user});
         if(!user){

@@ -18,7 +18,46 @@ const userStudentCreateSchema = object({
         roomNumber: string().required("Room Number is Required")
         .min(3,"Room No must be at least 3 characters long")
         .max(3,"Room No must be at most 3 characters long"),
+    }),
+    headers: object({
+        "Content-Type": string().required("Content Type is Required")
+        .equals(["application/json"],"Content Type must be application/json"),
+    })
+
+})
+
+// const userPasswordChangeSchema = {
+//     reqType: "POST",
+//     reqPath: "/api/user/change-password",
+// }
+const userPasswordChangeSchema = object({
+    body: object({
+        cpassword: string().required("Old Password is Required"),
+        newpassword: string().required("New Password is Required"),
+        confirmPassword: string().required("Confirm Password is Required")
+        .oneOf([ref("newpassword"),null],"Passwords must match")
+    }),
+    headers: object({
+        "x-access-token": string().required("Token is Required"),
+        "x-refresh-token": string().required("Refresh Token is Required"),
+        "machine-id": string().required("Machine ID is Required"),
+        "content-type": string().required("Content Type is Required")
+        .equals(["application/json"],"Content Type must be application/json"),
     })
 })
 
-export {userStudentCreateSchema};
+// const userGetProfileSchema = {
+//     reqType: "Get",
+//     reqPath: "/api/user/profile",
+// }
+const userGetProfileSchema = object({
+    headers: object({
+        "x-access-token": string().required("Token is Required"),
+        "x-refresh-token": string().required("Refresh Token is Required"),
+        "machine-id": string().required("Machine ID is Required"),
+        "content-type": string().required("Content Type is Required")
+        .equals(["application/json"],"Content Type must be application/json"),
+    })
+})
+
+export {userStudentCreateSchema,userPasswordChangeSchema,userGetProfileSchema};

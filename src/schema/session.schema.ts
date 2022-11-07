@@ -15,6 +15,10 @@ const sessionCreateSchema = object({
         .min(36,"Machine Id must be at least 5 characters long")
         .max(36,"Machine Id must be at mos10 5 characters long"),
         geoLocation:string().required("Geo Location is required")
+    }),
+    headers: object({
+        "content-type": string().required("Content Type is Required")
+        .equals(["application/json"],"Content Type must be application/json"),
     })
 })
 
