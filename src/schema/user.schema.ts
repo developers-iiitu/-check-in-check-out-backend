@@ -60,4 +60,26 @@ const userGetProfileSchema = object({
     })
 })
 
-export {userStudentCreateSchema,userPasswordChangeSchema,userGetProfileSchema};
+// const userGateGuardCreateSchema = {
+//     reqType: "Post",
+//     reqPath: "/api/user/gate-guard/create",
+// }
+const userGateGuardCreateSchema = object({
+    body: object({
+        name:string().required("Name is Required"),
+        phone: string().required("Phone is Required")
+        .min(10,"Phone must be at least 10 characters long")
+        .max(10,"Phone must be at most 10 characters long"),
+        email: string().required("Email is Required"),
+        password: string().required("Password is Required"),
+    }),
+    headers: object({
+        "x-access-token": string().required("Token is Required"),
+        "x-refresh-token": string().required("Refresh Token is Required"),
+        "machine-id": string().required("Machine ID is Required"),
+        "content-type": string().required("Content Type is Required")
+        .equals(["application/json"],"Content Type must be application/json"),
+    })
+})
+
+export {userStudentCreateSchema,userPasswordChangeSchema,userGetProfileSchema,userGateGuardCreateSchema};

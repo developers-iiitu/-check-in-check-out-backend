@@ -8,6 +8,7 @@ const findOneQrSession = async (query:Object)=>{
         throw new Error((error as Error).message);
     }
 }
+
 const createQrSession = async (query:Object)=>{
     try {
         return await QrSession.create(query);

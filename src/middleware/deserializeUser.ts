@@ -32,7 +32,8 @@ const deserializeUser = async (req:Request,res:Response,next:NextFunction) =>{
     }
     const result = await recreateAccessToken(refreshToken,deviceInfo);
     if(!result) return next();
-    res.setHeader("x-access-token",result.accessToken);
+   
+    
     req.user = result.userId;
     return next();
 };

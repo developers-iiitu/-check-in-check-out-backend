@@ -9,6 +9,7 @@ export interface IHistory {
     userId: mongoose.Types.ObjectId;
     purpose: string;
     type:Leave_Types;
+    leaveId?:mongoose.Types.ObjectId;
     outgoingTime: Date;
     incomingTime: Date;
     out: boolean;
@@ -33,13 +34,17 @@ const HistorySchema = new mongoose.Schema<IHistory>({
         default: Leave_Types.ONE_DAY,
         enum: Leave_Types
     },
+    leaveId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Leave",
+    },
     outgoingTime: {
         type: Date,
         required: true
     },
     incomingTime: {
         type: Date,
-        required: true
+       
     },
     out: {
         type: Boolean,
