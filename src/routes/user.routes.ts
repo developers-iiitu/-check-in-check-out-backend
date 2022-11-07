@@ -1,6 +1,6 @@
 import {Express, Router, Request, Response} from "express";
-import { userChangePasswordHandler, userProfileHandler, userStudentCreateHandler } from "../controller/user.controller";
-import { validateRequest,requiresUser } from "../middleware";
+import { gateGuardIdCreateHandler, userChangePasswordHandler, userProfileHandler, userStudentCreateHandler } from "../controller/user.controller";
+import { validateRequest,requiresUser, isAdmin } from "../middleware";
 import { userGetProfileSchema, userPasswordChangeSchema, userStudentCreateSchema } from "../schema/user.schema";
 import log from "../lib/logger";
 import geoip from "geoip-lite";
@@ -11,9 +11,14 @@ export default function(){
     // user profile
     router.get("/api/user/profile",[validateRequest(userGetProfileSchema),requiresUser],userProfileHandler);
     // update profile -> admin will be able to update any profile on request
+
+
+
+
     // change password
     router.post("/api/user/change-password",[validateRequest(userPasswordChangeSchema),requiresUser],userChangePasswordHandler);
     // Gate Guard account create by admin
+    router.post("/api/user/gate-guard/create",[requiresUser,isAdmin],gateGuardIdCreateHandler);
     // delete
     // update
     // ftech profiles

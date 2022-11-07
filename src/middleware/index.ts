@@ -1,4 +1,5 @@
 import validateRequest from "./validateRequest";
 import deserializeUser from "./deserializeUser";
 import requiresUser from "./requiredUser";
-export { validateRequest , deserializeUser,requiresUser};
+import { isAdmin } from "./userRole";
+export { validateRequest , deserializeUser,requiresUser,isAdmin};

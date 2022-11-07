@@ -7,5 +7,11 @@ const findOneGateGuard = async (query:Object)=>{
         throw new Error((error as Error).message);
     }
 }
-
-export {findOneGateGuard};
+const createGateGuard = async (query:Object)=>{
+    try {
+        return await GateGuard.create(query);
+    } catch (error) {
+        throw new Error((error as Error).message);
+    }
+}
+export {findOneGateGuard,createGateGuard};

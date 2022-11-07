@@ -203,7 +203,8 @@ const login_attemp=(data:any) => (`<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 
                             <td style="overflow-wrap:break-word;word-break:break-word;padding:33px 55px;font-family:'Cabin',sans-serif;" align="left">
 
                               <div style="color: #000000; line-height: 160%; text-align: left; word-wrap: break-word;">
-                                <p style="font-size: 14px; line-height: 160%;"><strong>Timestamp</strong>: ${data.timeStamp} Ip Address: ${data.ip}</p>
+                                <p style="font-size: 14px; line-height: 160%;"><strong>Timestamp</strong>: ${data.timeStamp} }</p>
+                                <p style="font-size: 14px; line-height: 160%;"><br /><strong>User agent: </strong>Ip Address: ${data.ip}</p>
                                 <p style="font-size: 14px; line-height: 160%;"><br /><strong>User agent: </strong>${data.userAgent}</p>
                                 <p style="font-size: 14px; line-height: 160%;"><br />You're receiving this message because of a successful sign-in from a device that we didn’t recognize. If you believe that this sign-in is suspicious, <span style="font-family: Cabin, sans-serif; font-size: 14px; line-height: 22.4px; background-color: #fffefe; color: #1a21d9;">please reset your password </span> immediately.</p>
                                 <p style="font-size: 14px; line-height: 160%;"><br />If you're aware of this sign-in, please disregard this notice. This can <span style="background-color: #fffefe; font-size: 14px; line-height: 22.4px;">happen</span> when you use your browser's incognito or private

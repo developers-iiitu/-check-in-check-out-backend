@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import log from "../lib/logger";
 import { findOneAdmin } from "../repo/admin.repo";
-import { findOneGateGuard } from "../repo/gate_kepper.repo";
+import { createGateGuard, findOneGateGuard } from "../repo/gate_kepper.repo";
 import { findOneStudent } from "../repo/student.repo";
-import { findOneUser, userUpdateOne, userValidateQuery } from "../repo/user.repo";
+import { createUser, findOneUser, userUpdateOne, userValidateQuery } from "../repo/user.repo";
 import { createStudentUser } from "../service/student.service";
 import { sendMail } from "../utils/email.utils";
 import { temp_password } from "../utils/temp_password";
@@ -36,12 +36,14 @@ const userProfileHandler = async (req:Request,res:Response)=>{
         return res.status(400).json({msg: "User not found"});
     }
     let profile;
+    
     if(user.role===2){
         profile = await findOneStudent({userId:user.id});
     }else if(user.role===1){
         profile = await findOneGateGuard({userId:user.id});
     }else{
         profile = await findOneAdmin({userId:user.id});
+       
     }
     profile=_.omit(profile?.toJSON(),["_id","userId","__v"])
     let data = {
@@ -53,7 +55,7 @@ const userProfileHandler = async (req:Request,res:Response)=>{
 
 }
 
-// chnage password
+// change password
 const userChangePasswordHandler = async (req:Request,res:Response)=>{
     
     
@@ -79,8 +81,27 @@ const userChangePasswordHandler = async (req:Request,res:Response)=>{
         
     }
 
+    // gate guard id create
+    const gateGuardIdCreateHandler = async (req:Request,res:Response)=>{
+        try {
+            const checkUser = await findOneUser({email:req.body.email});
+            if(checkUser){
+                return res.status(400).json({msg:"User already exists"});
+            }
+            
+            const salt = await bcrypt.genSalt(config.get("saltWorkFactor") as number);
+            const hash = bcrypt.hashSync(req.body.password, salt);
+            const user = await createUser({email:req.body.email,password:hash,role:1});
+            const gateGuard = await createGateGuard({userId:user.id,name:req.body.name,phone:req.body.phone});
+            sendMail(user.email,"Your password",temp_password({name:gateGuard.name,password:req.body.password}));
+            return res.status(200).json({msg:"Gate Guard Created"});
+        } catch (error) {
+            log.error(error);
+            return res.status(500).json({msg:(error as Error).message});
+        }
+    }
 
-export { userStudentCreateHandler,userProfileHandler,userChangePasswordHandler };
+export { userStudentCreateHandler,userProfileHandler,userChangePasswordHandler,gateGuardIdCreateHandler };
 
 
 
