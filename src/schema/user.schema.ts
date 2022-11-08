@@ -20,7 +20,7 @@ const userStudentCreateSchema = object({
         .max(3,"Room No must be at most 3 characters long"),
     }),
     headers: object({
-        "Content-Type": string().required("Content Type is Required")
+        "content-type": string().required("Content Type is Required")
         .equals(["application/json"],"Content Type must be application/json"),
     })
 
