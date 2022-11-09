@@ -32,10 +32,12 @@ const userStudentCreateSchema = object({
 // }
 const userPasswordChangeSchema = object({
     body: object({
-        cpassword: string().required("Old Password is Required"),
-        newpassword: string().required("New Password is Required"),
+        cpassword: string().required("Old Password is Required")
+        .min(6,"Password must be at least 8 characters long"),
+        newpassword: string().required("New Password is Required")
+        .min(6,"Password must be at least 8 characters long"),
         confirmPassword: string().required("Confirm Password is Required")
-        .oneOf([ref("newpassword"),null],"Passwords must match")
+        .oneOf([ref("newPassword"),null],"Passwords must match")
     }),
     headers: object({
         "x-access-token": string().required("Token is Required"),

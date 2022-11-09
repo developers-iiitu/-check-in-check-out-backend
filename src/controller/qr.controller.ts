@@ -4,7 +4,7 @@ import config from "../lib/config/default";
 import log from "../lib/logger";
 import { createHistory, findOneHistory, updateOneHistory } from "../repo/history.repo"
 import { createQrSession, deleteQrSession, findOneQrSession } from "../repo/qrCodeValidation.repo";
-
+import {generateQR} from "../service/qr.service";
 
 
 // Create a QR code for a student
@@ -15,8 +15,10 @@ const createQrStudent = async (req:Request,res:Response)=>{
             const userData={
                 historyId:checkHistory._id
             }
+            
             let qrSession = await createQrSession({userId:req.user,sentTime:new Date(),data:JSON.stringify(userData),isOut:true});
-            return res.status(200).send({message:"You are already out so incoming qr",qrCode:qrSession._id});
+            let base64 = await generateQR(qrSession.id);
+            return res.status(200).send({msg:"You are already out so incoming qr",qrCode:base64});
         }
         let qrSessionCheck = await findOneQrSession({userId:req.user});
         if(qrSessionCheck){
@@ -24,7 +26,8 @@ const createQrStudent = async (req:Request,res:Response)=>{
             let diff = currTime.getTime() - qrSessionCheck.sentTime.getTime();
             let allowedTime = config.get('qrValidateTime') as number;
             if(diff<=allowedTime){
-                return res.status(200).send({message:"Qr Code already exits",qrCode:qrSessionCheck.id});
+                let base64 = await generateQR(qrSessionCheck.id);
+                return res.status(200).send({msg:"Qr Code already exits",qrCode:base64});
             }
             await deleteQrSession({_id:qrSessionCheck.id});
         }
@@ -42,7 +45,8 @@ const createQrStudent = async (req:Request,res:Response)=>{
         }
         log.info(JSON.parse(qRSessionData.data));
         const qrSession = await createQrSession(qRSessionData);
-        return res.status(200).send({message:"Qr Code Created",qrCode:qrSession.id});
+        let base64 = await generateQR(qrSession.id);
+        return res.status(200).send({msg:"Qr Code Created",qrCode:base64});
 
     } catch (error) {
         log.error(error);

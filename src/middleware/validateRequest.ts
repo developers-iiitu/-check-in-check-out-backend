@@ -9,6 +9,7 @@ const validate = (schema: AnySchema)=> async(
 
 )=>{
     try {
+        log.info(req.body)
         await schema.validate({
             body:req.body,
             query:req.query,
