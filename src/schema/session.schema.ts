@@ -9,8 +9,7 @@ const sessionCreateSchema = object({
     body:object({
         email:string().required("Email is required"),
         password:string().required("Password is required")
-        .min(6,"Password must be at least 5 characters long")
-        .max(10,"Password must be at mos10 5 characters long"),
+        .min(6,"Password must be at least 5 characters long"),
         machineId:string().required("Machine is Id is Required")
         .min(36,"Machine Id must be at least 5 characters long")
         .max(36,"Machine Id must be at mos10 5 characters long"),
