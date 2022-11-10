@@ -10,6 +10,7 @@ import {generateQR} from "../service/qr.service";
 // Create a QR code for a student
 const createQrStudent = async (req:Request,res:Response)=>{
     try {
+        let allowedTime = config.get('qrValidateTime') as number;
         let checkHistory = await findOneHistory({userId:req.user,out:true});
         if(checkHistory){
             const userData={
@@ -18,16 +19,16 @@ const createQrStudent = async (req:Request,res:Response)=>{
             
             let qrSession = await createQrSession({userId:req.user,sentTime:new Date(),data:JSON.stringify(userData),isOut:true});
             let base64 = await generateQR(qrSession.id);
-            return res.status(200).send({msg:"You are already out so incoming qr",qrCode:qrSession.id});
+            return res.status(200).send({msg:"You are already out so Incoming qr",qrCode:qrSession.id,out:true,time:allowedTime});
         }
         let qrSessionCheck = await findOneQrSession({userId:req.user});
         if(qrSessionCheck){
             let currTime = new Date();
             let diff = currTime.getTime() - qrSessionCheck.sentTime.getTime();
-            let allowedTime = config.get('qrValidateTime') as number;
+            
             if(diff<=allowedTime){
                 let base64 = await generateQR(qrSessionCheck.id);
-                return res.status(200).send({msg:"Qr Code already exits",qrCode:qrSessionCheck.id});
+                return res.status(200).send({msg:"Qr Code already exits",qrCode:qrSessionCheck.id,out:qrSessionCheck.isOut,time:allowedTime-diff});
             }
             await deleteQrSession({_id:qrSessionCheck.id});
         }
@@ -46,7 +47,7 @@ const createQrStudent = async (req:Request,res:Response)=>{
         log.info(JSON.parse(qRSessionData.data));
         const qrSession = await createQrSession(qRSessionData);
         let base64 = await generateQR(qrSession.id);
-        return res.status(200).send({msg:"Qr Code Created",qrCode:qrSession.id});
+        return res.status(200).send({msg:"Qr Code Created",qrCode:qrSession.id,out:false,time:allowedTime});
 
     } catch (error) {
         log.error(error);
