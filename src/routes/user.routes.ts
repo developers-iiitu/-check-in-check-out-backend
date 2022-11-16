@@ -26,7 +26,9 @@ export default function(){
     //admin students
     // update
     // get all students
-    
+    // auto login
+
+
     // forgot password
     router.get("/",(req:Request,res:Response)=>{
       
