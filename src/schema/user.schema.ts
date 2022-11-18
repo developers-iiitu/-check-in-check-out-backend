@@ -56,9 +56,7 @@ const userGetProfileSchema = object({
     headers: object({
         "x-access-token": string().required("Token is Required"),
         "x-refresh-token": string().required("Refresh Token is Required"),
-        "machine-id": string().required("Machine ID is Required"),
-        "content-type": string().required("Content Type is Required")
-        .equals(["application/json"],"Content Type must be application/json"),
+        "machine-id": string().required("Machine ID is Required")
     })
 })
 
